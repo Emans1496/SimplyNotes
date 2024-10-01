@@ -1,19 +1,18 @@
-# Utilizziamo un'immagine PHP con supporto per NGINX e FPM
+# Dockerfile
+
 FROM php:8.1-fpm
 
-# Installiamo le estensioni necessarie
+# Installa estensioni necessarie
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Copiamo il codice del backend nella cartella /var/www
-COPY ./api /var/www/html
+# Copia i file della tua applicazione PHP nella directory di lavoro del container
+COPY . /var/www/html
 
-# Installiamo Nginx
-RUN apt-get update && apt-get install -y nginx
+# Setta la directory di lavoro
+WORKDIR /var/www/html
 
-# Copiamo il file di configurazione di Nginx
-COPY ./nginx/default.conf /etc/nginx/sites-available/default
+# Espone la porta (Render utilizza di default la variabile PORT, che spesso è 10000)
+EXPOSE 10000
 
-# Avviamo sia Nginx che PHP-FPM
-CMD service nginx start && php-fpm
-
-EXPOSE 80
+# Comando di avvio
+CMD ["php-fpm"]
