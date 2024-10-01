@@ -20,4 +20,4 @@ WORKDIR /var/www/html
 EXPOSE 10000
 
 # Avvia sia Nginx che PHP-FPM
-CMD service nginx start && php-fpm
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
