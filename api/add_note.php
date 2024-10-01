@@ -1,18 +1,12 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: https://simplynotes-oktn.onrender.com");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Il resto del tuo codice PHP...
-
-
-// Avvia la sessione
 session_start();
 
-// Controlla se l'utente è loggato
 if (isset($_SESSION['user_id'])) {
-    // Includi il file di configurazione del database
     include_once '../config/db.php';
 
     // Ottieni i dati inviati tramite POST
