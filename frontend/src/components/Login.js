@@ -16,7 +16,7 @@ function Login() {
     formData.append('password', password);
 
     axios
-      .post('http://localhost/notesapp/api/login.php', formData, { withCredentials: true })
+      .post('https://simplynotes-oktn.onrender.com/api/login.php', formData, { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           navigate('/dashboard');

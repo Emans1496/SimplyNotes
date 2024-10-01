@@ -17,7 +17,7 @@ function Register() {
     formData.append('password', password);
 
     axios
-      .post('http://localhost/notesapp/api/register.php', formData)
+      .post('https://simplynotes-oktn.onrender.com/api/register.php', formData)
       .then((response) => {
         setSuccess(response.data.success);
         setMessage(response.data.message);
