@@ -18,17 +18,18 @@ if (isset($_SESSION['user_id'])) {
         $user_id = $_SESSION['user_id'];
 
         // Inserisci la nota nel database
-        $stmt = $conn->prepare("INSERT INTO notes (user_id, title, content) VALUES (?, ?, ?)");
-        $stmt->bind_param("iss", $user_id, $title, $content);
+        $sql = "INSERT INTO notes (user_id, title, content) VALUES (:user_id, :title, :content)";
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':title', $title, PDO::PARAM_STR);
+        $stmt->bindValue(':content', $content, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
             echo json_encode(["success" => true, "message" => "Nota aggiunta con successo."]);
         } else {
             echo json_encode(["success" => false, "message" => "Errore durante l'aggiunta della nota."]);
         }
-
-        // Chiudi lo statement
-        $stmt->close();
     } else {
         echo json_encode(["success" => false, "message" => "Dati mancanti."]);
     }
@@ -36,6 +37,5 @@ if (isset($_SESSION['user_id'])) {
     echo json_encode(["success" => false, "message" => "Utente non autenticato."]);
 }
 
-// Chiudi la connessione
-$conn->close();
+// La connessione verrà chiusa automaticamente alla fine dello script
 ?>

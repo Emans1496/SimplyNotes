@@ -17,21 +17,20 @@ if (isset($_SESSION['user_id'])) {
     $note_id = $_POST['id'];
 
     if (isset($note_id)) {
-        $stmt = $conn->prepare("DELETE FROM notes WHERE id = ? AND user_id = ?");
-        $stmt->bind_param("ii", $note_id, $_SESSION['user_id']);
+        $sql = "DELETE FROM notes WHERE id = :id AND user_id = :user_id";
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindValue(':id', $note_id, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             echo json_encode(["success" => true, "message" => "Nota eliminata con successo."]);
         } else {
             echo json_encode(["success" => false, "message" => "Errore durante l'eliminazione della nota."]);
         }
-
-        $stmt->close();
     } else {
         echo json_encode(["success" => false, "message" => "ID della nota mancante."]);
     }
-
-    $conn->close();
 } else {
     echo json_encode(["success" => false, "message" => "Utente non autenticato."]);
 }
