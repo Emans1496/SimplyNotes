@@ -11,7 +11,7 @@ function Note({ note, refreshNotes }) {
     formData.append('id', note.id);
 
     axios
-      .post('https://simplynotes-oktn.onrender.com/api/delete_note.php', formData, { withCredentials: true })
+      .post('https://simplynotes-backend.onrender.com/api/delete_note.php', formData, { withCredentials: true })
       .then(() => {
         refreshNotes();
       })
@@ -29,7 +29,7 @@ function Note({ note, refreshNotes }) {
     formData.append('content', content);
 
     axios
-      .post('https://simplynotes-oktn.onrender.com/api/update_note.php', formData, { withCredentials: true })
+      .post('https://simplynotes-backend.onrender.com/api/update_note.php', formData, { withCredentials: true })
       .then(() => {
         setIsEditing(false);
         refreshNotes();

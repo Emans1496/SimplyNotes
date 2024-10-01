@@ -12,7 +12,7 @@ function Dashboard() {
 
   const refreshNotes = () => {
     axios
-      .get('https://simplynotes-oktn.onrender.com/api/get_notes.php', { withCredentials: true })
+      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
@@ -25,7 +25,7 @@ function Dashboard() {
 
   useEffect(() => {
     axios
-      .get('https://simplynotes-oktn.onrender.com/api/get_notes.php', { withCredentials: true })
+      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
@@ -41,7 +41,7 @@ function Dashboard() {
 
   const handleLogout = () => {
     axios
-      .post('https://simplynotes-oktn.onrender.com/api/logout.php', {}, { withCredentials: true })
+      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
       .then(() => {
         navigate('/');
       })
@@ -58,7 +58,7 @@ function Dashboard() {
     formData.append('content', content);
 
     axios
-      .post('https://simplynotes-oktn.onrender.com/api/add_note.php', formData, { withCredentials: true })
+      .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setMessage(response.data.message);
