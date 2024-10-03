@@ -9,23 +9,22 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     libxml2-dev \
-    libmysqlclient-dev \
-    default-mysql-client \
+    libpq-dev \
     zip \
     unzip \
-    && docker-php-ext-install pdo_mysql
+    && docker-php-ext-install pdo_pgsql
 
-# Copia i file della tua applicazione PHP nella directory di lavoro del container
+# Copia i file della tua applicazione nella directory di lavoro del container
 COPY . /var/www/html
 
 # Copia la configurazione Nginx
 COPY nginx/default.conf /etc/nginx/conf.d/default.template
 
-# Setta la directory di lavoro
+# Imposta la directory di lavoro
 WORKDIR /var/www/html
 
-# Espone la porta per Nginx (Render utilizza di default la variabile PORT)
+# Espone la porta (Render.com utilizza la variabile $PORT)
 EXPOSE 10000
 
-# Avvia sia Nginx che PHP-FPM, con envsubst per sostituire la variabile $PORT
+# Avvia Nginx e PHP-FPM
 CMD ["sh", "-c", "envsubst '$PORT' < /etc/nginx/conf.d/default.template > /etc/nginx/conf.d/default.conf && php-fpm -D && nginx -g 'daemon off;'"]
