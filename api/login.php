@@ -11,18 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'None',
-]);
-
-session_start();
-
+// Include i file di configurazione
 include_once '../config/db.php';
 include_once '../config/db_session_handler.php';
+
+// Inizializza il gestore di sessione personalizzato
+$sessionHandler = new DBSessionHandler($conn);
+session_set_save_handler($sessionHandler, true);
+
+session_start();
 
 // Ottieni i dati inviati tramite POST
 $username = $_POST['username'] ?? '';
