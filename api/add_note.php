@@ -24,6 +24,11 @@ session_start();
 if (isset($_SESSION['user_id'])) {
     include_once '../config/db.php';
     include_once '../config/db_session_handler.php';
+    
+    $sessionHandler = new DBSessionHandler($conn);
+    session_set_save_handler($sessionHandler, true);
+    
+    session_start();
 
     // Ottieni i dati inviati tramite POST
     $title = $_POST['title'];

@@ -20,6 +20,11 @@ session_set_cookie_params([
     'samesite' => 'None',
 ]);
 
+include_once '../config/db.php';
+include_once '../config/db_session_handler.php';
+
+$sessionHandler = new DBSessionHandler($conn);
+session_set_save_handler($sessionHandler, true);
 
 session_start();
 
