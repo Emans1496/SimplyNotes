@@ -42,6 +42,7 @@ if (!empty($username) && !empty($password)) {
                 // Password corretta, avvia la sessione
                 $_SESSION['user_id'] = $user['id'];
                 echo json_encode(["success" => true, "message" => "Login effettuato con successo."]);
+                die("Login effettuato senza sucesso");
             } else {
                 // Password errata
                 echo json_encode(["success" => false, "message" => "Username o password errati."]);
