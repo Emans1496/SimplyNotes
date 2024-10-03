@@ -10,11 +10,8 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Copia i file della tua applicazione PHP nella directory di lavoro del container
 COPY . /var/www/html
 
-# Copia la configurazione Nginx personalizzata
+# Copia la configurazione Nginx personalizzata (se esiste)
 COPY nginx/default.conf /etc/nginx/conf.d/default.template
-
-# Se hai un nginx.conf personalizzato, copialo
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Setta la directory di lavoro
 WORKDIR /var/www/html
