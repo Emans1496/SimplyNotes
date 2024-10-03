@@ -9,7 +9,6 @@ header("Content-Type: application/json; charset=UTF-8");
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
-    'domain' => 'simplynotes-backend.onrender.com',
     'secure' => true,
     'httponly' => true,
     'samesite' => 'None',
