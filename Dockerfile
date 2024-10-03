@@ -4,13 +4,13 @@ FROM php:8.1-fpm
 # Installa Nginx e gettext (necessario per envsubst)
 RUN apt-get update && apt-get install -y nginx gettext-base
 
-# Rimuovi il file di configurazione Nginx predefinito
-RUN rm /etc/nginx/conf.d/default.conf
+# Installa le estensioni PHP necessarie
+RUN docker-php-ext-install pdo pdo_mysql
 
 # Copia i file della tua applicazione PHP nella directory di lavoro del container
 COPY . /var/www/html
 
-# Copia la configurazione Nginx personalizzata (se esiste)
+# Copia la configurazione Nginx
 COPY nginx/default.conf /etc/nginx/conf.d/default.template
 
 # Setta la directory di lavoro
