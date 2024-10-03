@@ -5,7 +5,6 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Rispondi con 200 OK per le richieste preflight
     header("HTTP/1.1 200 OK");
     exit();
 }

@@ -19,6 +19,7 @@ function Register() {
     axios
       .post('https://simplynotes-backend.onrender.com/api/register.php', formData)
       .then((response) => {
+        console.log(response.data);
         setSuccess(response.data.success);
         setMessage(response.data.message);
         if (response.data.success) {
