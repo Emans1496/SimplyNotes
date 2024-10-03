@@ -1,13 +1,23 @@
 <?php
-header("Access-Control-Allow-Origin: https://simplynotes-oktn.onrender.com"); 
+header("Access-Control-Allow-Origin: https://simplynotes-oktn.onrender.com");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
+
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => 'simplynotes-backend.onrender.com',
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'None',
+]);
+
 
 session_start();
 

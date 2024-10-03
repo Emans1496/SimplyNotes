@@ -1,5 +1,4 @@
 <?php
-// Configurazione del database
 $servername = "dpg-crtcf252ng1s73bvnngq-a"; 
 $username = "dbsimplynotes_user";            
 $password = "relDbjxCEhkxDcUmUAfml4SDkD8HFbFm";        
