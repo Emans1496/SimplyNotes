@@ -1,13 +1,11 @@
 <?php
+require_once '../config/db.php';
+
 header("Access-Control-Allow-Origin: https://simplynotes-static.onrender.com");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header("HTTP/1.1 200 OK");
-    exit();
-}
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
@@ -16,34 +14,39 @@ session_set_cookie_params([
     'httponly' => true,
     'samesite' => 'None',
 ]);
+// Avvia la sessione
+session_start();
 
-include_once '../config/db.php';
+// Ottieni i dati dal frontend
+$username = $_POST['username'] ?? '';
+$email = $_POST['email'] ?? '';
+$password = $_POST['password'] ?? '';
 
-// Ottieni i dati inviati tramite POST
-$username = $_POST['username'];
-$password = $_POST['password'];
+// Verifica che tutti i campi siano stati compilati
+if (empty($username) || empty($email) || empty($password)) {
+    echo json_encode(['success' => false, 'message' => 'Compila tutti i campi.']);
+    exit();
+}
 
-// Controlla se i dati sono stati inviati
-if (isset($username) && isset($password)) {
-    $sql = "SELECT * FROM users WHERE username = :username";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-    $stmt->execute();
+// Hash della password
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(["success" => false, "message" => "Username già esistente."]);
-    } else {
-        $sql = "INSERT INTO users (username, password) VALUES (:username, :password)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
-        $stmt->bindValue(':password', $password, PDO::PARAM_STR);
-        if ($stmt->execute()) {
-            echo json_encode(["success" => true, "message" => "Registrazione avvenuta con successo."]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Errore durante la registrazione."]);
-        }
+try {
+    // Verifica se l'username o l'email esistono già
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username OR email = :email");
+    $stmt->execute(['username' => $username, 'email' => $email]);
+    if ($stmt->fetch()) {
+        echo json_encode(['success' => false, 'message' => 'Username o email già in uso.']);
+        exit();
     }
-} else {
-    echo json_encode(["success" => false, "message" => "Dati mancanti."]);
+
+    // Inserisci il nuovo utente nel database
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
+    $stmt->execute(['username' => $username, 'email' => $email, 'password' => $hashedPassword]);
+
+    echo json_encode(['success' => true, 'message' => 'Registrazione avvenuta con successo.']);
+} catch (PDOException $e) {
+    error_log("Errore durante la registrazione: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Errore durante la registrazione.']);
 }
 ?>

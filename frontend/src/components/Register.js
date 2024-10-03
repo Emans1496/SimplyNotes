@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 function Register() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
 
@@ -13,21 +14,25 @@ function Register() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
 
     axios
-      .post('https://simplynotes-backend.onrender.com/api/register.php', formData)
+      .post(
+        "https://simplynotes-backend.onrender.com/api/register.php",
+        formData
+      )
       .then((response) => {
         console.log(response.data);
         setSuccess(response.data.success);
         setMessage(response.data.message);
         if (response.data.success) {
-          navigate('/');
+          navigate("/");
         }
       })
       .catch((error) => {
-        console.error('Errore:', error);
+        console.error("Errore:", error);
       });
   };
 
@@ -37,7 +42,9 @@ function Register() {
         <div className="col-md-6">
           <h2 className="text-center">Registrazione</h2>
           {message && (
-            <div className={`alert ${success ? 'alert-success' : 'alert-danger'}`}>
+            <div
+              className={`alert ${success ? "alert-success" : "alert-danger"}`}
+            >
               {message}
             </div>
           )}
@@ -50,6 +57,17 @@ function Register() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required // Rendi il campo obbligatorio se necessario
               />
             </div>
             <div className="mb-3">
