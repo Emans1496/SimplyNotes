@@ -8,7 +8,6 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 session_set_cookie_params([
     'lifetime' => 0,
-    'path' => '/',
     'secure' => true,
     'httponly' => true,
     'samesite' => 'None',

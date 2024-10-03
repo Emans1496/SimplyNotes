@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Imposta i parametri dei cookie di sessione senza specificare il dominio
 session_set_cookie_params([
     'lifetime' => 0,
-    'path' => '/',
     'secure' => true,
     'httponly' => true,
     'samesite' => 'None',
