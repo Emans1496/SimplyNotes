@@ -22,6 +22,7 @@ session_set_cookie_params([
 session_start();
 
 include_once '../config/db.php';
+include_once '../config/db_session_handler.php';
 
 // Ottieni i dati inviati tramite POST
 $username = $_POST['username'] ?? '';

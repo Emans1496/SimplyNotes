@@ -22,6 +22,7 @@ session_set_cookie_params([
 session_start();
 
 include_once '../config/db.php';
+include_once '../config/db_session_handler.php';
 
 // Verifica se l'utente è autenticato
 if (!isset($_SESSION['user_id'])) {

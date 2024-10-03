@@ -25,6 +25,7 @@ session_start();
 
 if (isset($_SESSION['user_id'])) {
     include_once '../config/db.php';
+    include_once '../config/db_session_handler.php';
 
     $note_id = $_POST['id'];
 
