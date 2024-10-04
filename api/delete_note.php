@@ -5,7 +5,6 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-W
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     // Rispondi con 200 OK per le richieste preflight
     header("HTTP/1.1 200 OK");
@@ -22,33 +21,36 @@ session_set_cookie_params([
 include_once '../config/db.php';
 include_once '../config/db_session_handler.php';
 
-$sessionHandler = new DBSessionHandler($conn);
-session_set_save_handler($sessionHandler, true);
+// Ottieni i dati inviati tramite POST
+$user_id = $_POST['user_id'] ?? '';
+$note_id = $_POST['id'] ?? '';
 
-session_start();
+// Verifica se l'utente è autenticato
+if (empty($user_id)) {
+    echo json_encode(['success' => false, 'message' => 'Non autenticato.']);
+    exit();
+}
 
-if (isset($_SESSION['user_id'])) {
-    include_once '../config/db.php';
-    include_once '../config/db_session_handler.php';
+// Controlla se l'ID della nota è stato inviato
+if (empty($note_id)) {
+    echo json_encode(['success' => false, 'message' => 'ID della nota mancante.']);
+    exit();
+}
 
-    $note_id = $_POST['id'];
+try {
+    // Cancella la nota dal database
+    $sql = "DELETE FROM notes WHERE id = :id AND user_id = :user_id";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindValue(':id', $note_id, PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
-    if (isset($note_id)) {
-        $sql = "DELETE FROM notes WHERE id = :id AND user_id = :user_id";
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bindValue(':id', $note_id, PDO::PARAM_INT);
-        $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-
-        if ($stmt->execute()) {
-            echo json_encode(["success" => true, "message" => "Nota eliminata con successo."]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Errore durante l'eliminazione della nota."]);
-        }
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Nota eliminata con successo.']);
     } else {
-        echo json_encode(["success" => false, "message" => "ID della nota mancante."]);
+        echo json_encode(['success' => false, 'message' => 'Errore durante l\'eliminazione della nota.']);
     }
-} else {
-    echo json_encode(["success" => false, "message" => "Utente non autenticato."]);
+} catch (PDOException $e) {
+    error_log("Errore durante l'eliminazione della nota: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Errore durante l\'eliminazione della nota.']);
 }
 ?>
