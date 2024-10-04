@@ -11,8 +11,18 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const refreshNotes = () => {
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      setMessage('Utente non autenticato. Per favore fai il login di nuovo.');
+      navigate('/');
+      return;
+    }
+
     axios
-      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
+      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', {
+        params: { user_id: userId },
+        withCredentials: true,
+      })
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
@@ -25,21 +35,15 @@ function Dashboard() {
 
   useEffect(() => {
     refreshNotes();
-  }, []);
-
-  const handleLogout = () => {
-    // Rimuovi l'autenticazione da localStorage
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('user_id');
-    navigate('/');
-  };
+  }, [navigate]);
 
   const handleAddNote = (e) => {
     e.preventDefault();
 
     const userId = localStorage.getItem('user_id');
     if (!userId) {
-      setMessage('Utente non autenticato.');
+      setMessage('Utente non autenticato. Per favore fai il login di nuovo.');
+      navigate('/');
       return;
     }
 
@@ -61,8 +65,20 @@ function Dashboard() {
         }
       })
       .catch((error) => {
-        console.error('Errore durante l\'aggiunta della nota:', error);
-        setMessage('Errore durante l\'aggiunta della nota.');
+        console.error('Errore durante l aggiunta della nota:', error);
+        setMessage('Errore durante l aggiunta della nota.');
+      });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user_id');
+    axios
+      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
+      .then(() => {
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Errore:', error);
       });
   };
 
