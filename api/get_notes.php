@@ -23,13 +23,12 @@ session_start();
 include_once '../config/db.php';
 include_once '../config/db_session_handler.php';
 
-// Verifica se l'utente è autenticato
-if (!isset($_SESSION['user_id'])) {
+// Verifica l'autenticazione tramite user_id passato come parametro GET
+$user_id = $_GET['user_id'] ?? '';
+if (empty($user_id)) {
     echo json_encode(['success' => false, 'message' => 'Non autenticato.']);
     exit();
 }
-
-$user_id = $_SESSION['user_id'];
 
 try {
     // Recupera le note dell'utente
