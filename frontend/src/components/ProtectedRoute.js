@@ -1,34 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import axios from 'axios';
 
 function ProtectedRoute({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("https://simplynotes-backend.onrender.com/api/checkauth.php", { withCredentials: true })
+      .get('https://simplynotes-backend.onrender.com/api/checkauth.php', {
+        withCredentials: true,
+      })
       .then((response) => {
-        if (response.data.isAuthenticated) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-          navigate("/");
-        }
+        setIsAuthenticated(response.data.isAuthenticated);
       })
       .catch((error) => {
-        console.error("Errore:", error);
+        console.error('Errore durante la verifica dell\'autenticazione:', error);
         setIsAuthenticated(false);
-        navigate("/");
       });
-  }, [navigate]);
+  }, []);
 
   if (isAuthenticated === null) {
     return <div>Caricamento...</div>;
   }
 
-  return isAuthenticated ? children : null;
+  return isAuthenticated ? children : <Navigate to="/" />;
 }
 
 export default ProtectedRoute;

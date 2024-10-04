@@ -1,31 +1,36 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
+    formData.append("username", username);
+    formData.append("password", password);
 
     axios
-      .post('https://simplynotes-backend.onrender.com/api/login.php', formData, { withCredentials: true })
+      .post(
+        "https://simplynotes-backend.onrender.com/api/login.php",
+        formData,
+        { withCredentials: true }
+      )
       .then((response) => {
         if (response.data.success) {
-          navigate('/dashboard');
+          sessionStorage.setItem("user_id", response.data.user_id);
+          navigate("/dashboard");
         } else {
           setMessage(response.data.message);
         }
       })
       .catch((error) => {
-        console.error('Errore:', error);
+        console.error("Errore:", error);
       });
   };
 
