@@ -22,6 +22,7 @@ function Login() {
         if (response.data.success) {
           localStorage.setItem('isAuthenticated', 'true');
           localStorage.setItem('userId', response.data.user_id);
+          navigate('/dashboard');
         } else {
           setMessage(response.data.message);
         }
