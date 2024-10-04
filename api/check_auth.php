@@ -18,16 +18,10 @@ session_set_cookie_params([
     'samesite' => 'None',
 ]);
 
-include_once '../config/db.php';
-include_once '../config/db_session_handler.php';
-
-$sessionHandler = new DBSessionHandler($conn);
-session_set_save_handler($sessionHandler, true);
-
 session_start();
 
 if (isset($_SESSION['user_id'])) {
-    echo json_encode(['isAuthenticated' => true]);
+    echo json_encode(['isAuthenticated' => true, 'user_id' => $_SESSION['user_id']]);
 } else {
     echo json_encode(['isAuthenticated' => false]);
 }
