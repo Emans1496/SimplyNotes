@@ -1,30 +1,34 @@
-// App.js
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import Dashboard from "./components/Dashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
-  );
+function ProtectedRoute({ children }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("https://simplynotes-backend.onrender.com/api/checkauth.php", { withCredentials: true })
+      .then((response) => {
+        if (response.data.isAuthenticated) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.error("Errore:", error);
+        setIsAuthenticated(false);
+        navigate("/");
+      });
+  }, [navigate]);
+
+  if (isAuthenticated === null) {
+    return <div>Caricamento...</div>;
+  }
+
+  return isAuthenticated ? children : null;
 }
 
-export default App;
+export default ProtectedRoute;

@@ -1,50 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Note from './Note';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Note from "./Note";
 
 function Dashboard() {
   const [notes, setNotes] = useState([]);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [message, setMessage] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const refreshNotes = () => {
     axios
-      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
+      .get("https://simplynotes-backend.onrender.com/api/get_notes.php", { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
+        } else {
+          navigate("/");
         }
       })
       .catch((error) => {
-        console.error('Errore:', error);
+        console.error("Errore:", error);
+        navigate("/");
       });
   };
 
   useEffect(() => {
-    axios
-      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
-      .then((response) => {
-        if (response.data.success) {
-          setNotes(response.data.notes);
-        }
-      })
-      .catch((error) => {
-        console.error('Errore nel caricamento delle note:', error);
-      });
-  }, []);
-  
+    refreshNotes();
+  }, [navigate]);
 
   const handleLogout = () => {
     axios
-      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
+      .post("https://simplynotes-backend.onrender.com/api/logout.php", {}, { withCredentials: true })
       .then(() => {
-        navigate('/');
+        navigate("/");
       })
       .catch((error) => {
-        console.error('Errore:', error);
+        console.error("Errore:", error);
       });
   };
 
@@ -52,23 +45,23 @@ function Dashboard() {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('content', content);
+    formData.append("title", title);
+    formData.append("content", content);
 
     axios
-      .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
+      .post("https://simplynotes-backend.onrender.com/api/add_note.php", formData, { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setMessage(response.data.message);
-          setTitle('');
-          setContent('');
+          setTitle("");
+          setContent("");
           refreshNotes();
         } else {
           setMessage(response.data.message);
         }
       })
       .catch((error) => {
-        console.error('Errore:', error);
+        console.error("Errore:", error);
       });
   };
 
