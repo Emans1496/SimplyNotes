@@ -1,33 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+// App.js
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Dashboard from "./components/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function ProtectedRoute({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
-
-  useEffect(() => {
-    axios
-      .get('https://simplynotes-backend.onrender.com/api/check_auth.php', {
-        withCredentials: true,
-      })
-      .then((response) => {
-        setIsAuthenticated(response.data.isAuthenticated);
-      })
-      .catch((error) => {
-        console.error('Errore durante la verifica dell\'autenticazione:', error);
-        setIsAuthenticated(false);
-      });
-  }, []);
-
-  if (isAuthenticated === null) {
-    return null;
-  }
-
-  if (isAuthenticated) {
-    return children;
-  } else {
-    return <Navigate to="/" />;
-  }
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
-export default ProtectedRoute;
+export default App;
