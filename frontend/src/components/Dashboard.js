@@ -1,3 +1,4 @@
+// Dashboard.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -26,16 +27,19 @@ function Dashboard() {
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
+        } else {
+          setMessage('Errore durante il caricamento delle note.');
         }
       })
       .catch((error) => {
         console.error('Errore:', error);
+        setMessage('Errore durante il caricamento delle note.');
       });
   };
 
   useEffect(() => {
     refreshNotes();
-  }, [navigate]);
+  }, []);
 
   const handleAddNote = (e) => {
     e.preventDefault();
@@ -90,7 +94,7 @@ function Dashboard() {
           Logout
         </button>
       </div>
-      {message && <div className="alert alert-success">{message}</div>}
+      {message && <div className="alert alert-danger">{message}</div>}
       <form onSubmit={handleAddNote} className="mb-4">
         <h3>Aggiungi una nuova nota</h3>
         <div className="mb-3">

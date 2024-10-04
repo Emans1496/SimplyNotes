@@ -1,3 +1,4 @@
+// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -19,7 +20,8 @@ function Login() {
       .post('https://simplynotes-backend.onrender.com/api/login.php', formData, { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
-          localStorage.setItem('isAuthenticated', 'true');
+          // Salva user_id in localStorage
+          localStorage.setItem('user_id', response.data.user_id);
           navigate('/dashboard');
         } else {
           setMessage(response.data.message);
@@ -27,7 +29,6 @@ function Login() {
       })
       .catch((error) => {
         console.error('Errore:', error);
-        setMessage('Si è verificato un errore durante il login.');
       });
   };
 
