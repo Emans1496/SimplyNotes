@@ -1,32 +1,67 @@
-import React, { useState } from 'react';
-// import axios from 'axios'; // commentato temporaneamente
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Note from './Note';
 
 function Dashboard() {
-  const [notes, setNotes] = useState([
-    { id: 1, title: "Nota 1", content: "Contenuto della nota 1" },
-    { id: 2, title: "Nota 2", content: "Contenuto della nota 2" },
-  ]);
+  const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  // Elimina il useEffect per il caricamento delle note
+  const refreshNotes = () => {
+    axios
+      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
+      .then((response) => {
+        if (response.data.success) {
+          setNotes(response.data.notes);
+        }
+      })
+      .catch((error) => {
+        console.error('Errore:', error);
+      });
+  };
+
+  useEffect(() => {
+    refreshNotes();
+  }, []);
 
   const handleLogout = () => {
-    // Elimina la logica di logout
-    localStorage.removeItem('user_id');
-    navigate('/');
+    axios
+      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
+      .then(() => {
+        // Rimuovi l'autenticazione da localStorage
+        localStorage.removeItem('isAuthenticated');
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Errore durante il logout:', error);
+      });
   };
 
   const handleAddNote = (e) => {
     e.preventDefault();
-    const newNote = { id: notes.length + 1, title, content };
-    setNotes([...notes, newNote]);
-    setTitle('');
-    setContent('');
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+
+    axios
+      .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
+      .then((response) => {
+        if (response.data.success) {
+          setMessage(response.data.message);
+          setTitle('');
+          setContent('');
+          refreshNotes();
+        } else {
+          setMessage(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Errore durante l aggiunta della nota:', error);
+      });
   };
 
   return (
@@ -67,7 +102,7 @@ function Dashboard() {
       {notes.length > 0 ? (
         <div className="row">
           {notes.map((note) => (
-            <Note key={note.id} note={note} refreshNotes={() => {}} />
+            <Note key={note.id} note={note} refreshNotes={refreshNotes} />
           ))}
         </div>
       ) : (
