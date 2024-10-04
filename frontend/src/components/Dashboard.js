@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Note from './Note';
+import './App.css';
 
 function Dashboard() {
   const [notes, setNotes] = useState([]);
@@ -26,22 +27,18 @@ function Dashboard() {
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
-        } else {
-          setMessage(response.data.message);
         }
       })
       .catch((error) => {
         console.error('Errore:', error);
-        setMessage('Errore durante il caricamento delle note.');
       });
   };
 
   useEffect(() => {
     refreshNotes();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
-    // Rimuove l'autenticazione e l'user_id da localStorage
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('userId');
     axios
@@ -67,7 +64,7 @@ function Dashboard() {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    formData.append('user_id', userId); // Passiamo l'user_id direttamente
+    formData.append('user_id', userId);
 
     axios
       .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
@@ -88,9 +85,10 @@ function Dashboard() {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container mt-5 dashboard-container">
+      <div className="dashboard-header">
         <h2>Dashboard</h2>
+        <img src="/2.png" alt="Dashboard Logo" />
         <button className="btn btn-secondary" onClick={handleLogout}>
           Logout
         </button>
