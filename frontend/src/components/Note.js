@@ -5,10 +5,12 @@ function Note({ note, refreshNotes }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [content, setContent] = useState(note.content);
+  const userId = localStorage.getItem('userId');
 
   const handleDelete = () => {
     const formData = new FormData();
     formData.append('id', note.id);
+    formData.append('user_id', userId);
 
     axios
       .post('https://simplynotes-backend.onrender.com/api/delete_note.php', formData, { withCredentials: true })
@@ -27,6 +29,7 @@ function Note({ note, refreshNotes }) {
     formData.append('id', note.id);
     formData.append('title', title);
     formData.append('content', content);
+    formData.append('user_id', userId);
 
     axios
       .post('https://simplynotes-backend.onrender.com/api/update_note.php', formData, { withCredentials: true })
