@@ -1,4 +1,3 @@
-// Dashboard.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -12,28 +11,15 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const refreshNotes = () => {
-    const userId = localStorage.getItem('user_id');
-    if (!userId) {
-      setMessage('Utente non autenticato. Per favore fai il login di nuovo.');
-      navigate('/');
-      return;
-    }
-
     axios
-      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', {
-        params: { user_id: userId },
-        withCredentials: true,
-      })
+      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
-        } else {
-          setMessage('Errore durante il caricamento delle note.');
         }
       })
       .catch((error) => {
         console.error('Errore:', error);
-        setMessage('Errore durante il caricamento delle note.');
       });
   };
 
@@ -41,20 +27,25 @@ function Dashboard() {
     refreshNotes();
   }, []);
 
+  const handleLogout = () => {
+    axios
+      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
+      .then(() => {
+        // Rimuovi l'autenticazione da localStorage
+        localStorage.removeItem('isAuthenticated');
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Errore durante il logout:', error);
+      });
+  };
+
   const handleAddNote = (e) => {
     e.preventDefault();
-
-    const userId = localStorage.getItem('user_id');
-    if (!userId) {
-      setMessage('Utente non autenticato. Per favore fai il login di nuovo.');
-      navigate('/');
-      return;
-    }
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    formData.append('user_id', userId);
 
     axios
       .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
@@ -70,19 +61,6 @@ function Dashboard() {
       })
       .catch((error) => {
         console.error('Errore durante l aggiunta della nota:', error);
-        setMessage('Errore durante l aggiunta della nota.');
-      });
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('user_id');
-    axios
-      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
-      .then(() => {
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error('Errore:', error);
       });
   };
 
@@ -94,7 +72,7 @@ function Dashboard() {
           Logout
         </button>
       </div>
-      {message && <div className="alert alert-danger">{message}</div>}
+      {message && <div className="alert alert-success">{message}</div>}
       <form onSubmit={handleAddNote} className="mb-4">
         <h3>Aggiungi una nuova nota</h3>
         <div className="mb-3">
