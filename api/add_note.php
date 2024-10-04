@@ -6,6 +6,7 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    // Rispondi con 200 OK per le richieste preflight
     header("HTTP/1.1 200 OK");
     exit();
 }
@@ -20,11 +21,12 @@ session_set_cookie_params([
 session_start();
 
 include_once '../config/db.php';
+include_once '../config/db_session_handler.php';
 
 // Ottieni i dati inviati tramite POST
 $title = $_POST['title'] ?? '';
 $content = $_POST['content'] ?? '';
-$user_id = $_POST['user_id'] ?? ''; // Usa user_id dal POST, che viene dal localStorage
+$user_id = $_POST['user_id'] ?? '';
 
 // Controlla se i dati sono stati inviati
 if (empty($title) || empty($content) || empty($user_id)) {

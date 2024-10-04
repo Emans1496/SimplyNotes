@@ -26,16 +26,19 @@ function Dashboard() {
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
+        } else {
+          setMessage(response.data.message);
         }
       })
       .catch((error) => {
         console.error('Errore:', error);
+        setMessage('Errore durante il caricamento delle note.');
       });
   };
 
   useEffect(() => {
     refreshNotes();
-  }, [navigate]);
+  }, []);
 
   const handleLogout = () => {
     // Rimuove l'autenticazione e l'user_id da localStorage

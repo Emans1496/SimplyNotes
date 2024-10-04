@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -22,7 +21,7 @@ function Login() {
         if (response.data.success) {
           localStorage.setItem('isAuthenticated', 'true');
           localStorage.setItem('userId', response.data.user_id);
-          navigate('/dashboard');
+          navigate('/dashboard'); // Aggiungi il reindirizzamento dopo il login
         } else {
           setMessage(response.data.message);
         }
