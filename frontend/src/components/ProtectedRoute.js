@@ -7,7 +7,7 @@ function ProtectedRoute({ children }) {
 
   useEffect(() => {
     axios
-      .get('https://simplynotes-backend.onrender.com/api/checkauth.php', {
+      .get('https://simplynotes-backend.onrender.com/api/check_auth.php', {
         withCredentials: true,
       })
       .then((response) => {
