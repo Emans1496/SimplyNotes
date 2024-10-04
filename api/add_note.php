@@ -11,32 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-session_set_cookie_params([
-    'lifetime' => 0,
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'None',
-]);
+include_once '../config/db.php';
 
-session_start();
+// Ottieni i dati inviati tramite POST
+$title = $_POST['title'] ?? '';
+$content = $_POST['content'] ?? '';
+$user_id = $_POST['user_id'] ?? '';
 
-if (isset($_SESSION['user_id'])) {
-    include_once '../config/db.php';
-    include_once '../config/db_session_handler.php';
-    
-    $sessionHandler = new DBSessionHandler($conn);
-    session_set_save_handler($sessionHandler, true);
-    
-    session_start();
-
-    // Ottieni i dati inviati tramite POST
-    $title = $_POST['title'];
-    $content = $_POST['content'];
-
-    // Controlla se i dati sono stati inviati
-    if (isset($title) && isset($content)) {
-        $user_id = $_SESSION['user_id'];
-
+// Controlla se i dati sono stati inviati
+if (!empty($title) && !empty($content) && !empty($user_id)) {
+    try {
         // Inserisci la nota nel database
         $sql = "INSERT INTO notes (user_id, title, content) VALUES (:user_id, :title, :content)";
         $stmt = $conn->prepare($sql);
@@ -50,12 +34,11 @@ if (isset($_SESSION['user_id'])) {
         } else {
             echo json_encode(["success" => false, "message" => "Errore durante l'aggiunta della nota."]);
         }
-    } else {
-        echo json_encode(["success" => false, "message" => "Dati mancanti."]);
+    } catch (PDOException $e) {
+        error_log("Errore durante l'aggiunta della nota: " . $e->getMessage());
+        echo json_encode(["success" => false, "message" => "Errore durante l'aggiunta della nota."]);
     }
 } else {
-    echo json_encode(["success" => false, "message" => "Utente non autenticato."]);
+    echo json_encode(["success" => false, "message" => "Dati mancanti."]);
 }
-
-// La connessione verrà chiusa automaticamente alla fine dello script
 ?>

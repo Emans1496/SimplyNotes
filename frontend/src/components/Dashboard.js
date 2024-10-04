@@ -28,24 +28,25 @@ function Dashboard() {
   }, []);
 
   const handleLogout = () => {
-    axios
-      .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
-      .then(() => {
-        // Rimuovi l'autenticazione da localStorage
-        localStorage.removeItem('isAuthenticated');
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error('Errore durante il logout:', error);
-      });
+    // Rimuovi l'autenticazione da localStorage
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user_id');
+    navigate('/');
   };
 
   const handleAddNote = (e) => {
     e.preventDefault();
 
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      setMessage('Utente non autenticato.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
+    formData.append('user_id', userId);
 
     axios
       .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
@@ -60,7 +61,8 @@ function Dashboard() {
         }
       })
       .catch((error) => {
-        console.error('Errore durante l aggiunta della nota:', error);
+        console.error('Errore durante l\'aggiunta della nota:', error);
+        setMessage('Errore durante l\'aggiunta della nota.');
       });
   };
 
