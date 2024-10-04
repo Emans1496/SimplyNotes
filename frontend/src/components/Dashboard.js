@@ -30,14 +30,15 @@ function Dashboard() {
         if (response.data.success) {
           setNotes(response.data.notes);
         } else {
+          console.warn('Utente non autenticato, reindirizzamento al login.');
           navigate('/');
         }
       })
       .catch((error) => {
-        console.error('Errore:', error);
-        navigate('/');
+        console.error('Errore nel caricamento delle note:', error);
       });
   }, [navigate]);
+  
 
   const handleLogout = () => {
     axios
