@@ -11,8 +11,18 @@ function Dashboard() {
   const navigate = useNavigate();
 
   const refreshNotes = () => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      setMessage('Utente non autenticato. Per favore fai il login di nuovo.');
+      navigate('/');
+      return;
+    }
+
     axios
-      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', { withCredentials: true })
+      .get('https://simplynotes-backend.onrender.com/api/get_notes.php', {
+        params: { user_id: userId },
+        withCredentials: true,
+      })
       .then((response) => {
         if (response.data.success) {
           setNotes(response.data.notes);
@@ -25,14 +35,15 @@ function Dashboard() {
 
   useEffect(() => {
     refreshNotes();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
+    // Rimuove l'autenticazione e l'user_id da localStorage
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userId');
     axios
       .post('https://simplynotes-backend.onrender.com/api/logout.php', {}, { withCredentials: true })
       .then(() => {
-        // Rimuovi l'autenticazione da localStorage
-        localStorage.removeItem('isAuthenticated');
         navigate('/');
       })
       .catch((error) => {
@@ -43,9 +54,17 @@ function Dashboard() {
   const handleAddNote = (e) => {
     e.preventDefault();
 
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      setMessage('Utente non autenticato. Per favore fai il login di nuovo.');
+      navigate('/');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
+    formData.append('user_id', userId); // Passiamo l'user_id direttamente
 
     axios
       .post('https://simplynotes-backend.onrender.com/api/add_note.php', formData, { withCredentials: true })
@@ -61,6 +80,7 @@ function Dashboard() {
       })
       .catch((error) => {
         console.error('Errore durante l aggiunta della nota:', error);
+        setMessage('Errore durante l aggiunta della nota.');
       });
   };
 
