@@ -31,6 +31,11 @@ body {
 }
 
 .form-label {
+  color: #220B57;
+  font-weight: 700;
+}
+
+.form-labell {
   color: white;
   font-weight: 700;
 }

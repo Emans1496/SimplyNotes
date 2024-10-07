@@ -48,7 +48,7 @@ function Note({ note, refreshNotes }) {
         {isEditing ? (
           <form onSubmit={handleUpdate} className="card-body">
             <div className="mb-3">
-              <label className="form-label">Titolo</label>
+              <label className="form-labell">Titolo</label>
               <input
                 type="text"
                 className="form-control"
@@ -58,7 +58,7 @@ function Note({ note, refreshNotes }) {
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Contenuto</label>
+              <label className="form-labell">Contenuto</label>
               <textarea
                 className="form-control"
                 value={content}
