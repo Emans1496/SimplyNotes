@@ -96,7 +96,7 @@ function Dashboard() {
       <form onSubmit={handleAddNote} className="mb-4">
         <h3>Aggiungi una nuova nota</h3>
         <div className="mb-3">
-          <label className="form-label">Titolo</label>
+          <label className="form-labell">Titolo</label>
           <input
             type="text"
             className="form-control"
@@ -106,7 +106,7 @@ function Dashboard() {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Contenuto</label>
+          <label className="form-labell">Contenuto</label>
           <textarea
             className="form-control"
             value={content}
