@@ -5,7 +5,6 @@ body {
 
 .container {
   margin: auto;
-  padding: 20px;
 }
 
 .login-container, .register-container {
@@ -32,8 +31,8 @@ body {
 }
 
 .form-label {
-  color: #220B57;
-  font-weight: bold;
+  color: white;
+  font-weight: 700;
 }
 
 .form-control{
@@ -59,17 +58,31 @@ body {
 }
 
 .dashboard-container {
-  padding: 20px;
-  background-color: #F9F9F9;
+  background-color: #220b57;
   border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px #0000001a;
+  height: 1080px;
+  color: white;
+  text-align: center;
 }
 
 .dashboard-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  display: flex;
+  justify-content: space-around;
   margin-bottom: 20px;
+  background-color: #f47c00;
+  text-align: center;
+}
+
+.btnLogout{
+  background-color: #220b57;
+  color: #fff;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 15px;
+  text-transform: uppercase;
 }
 
 .dashboard-header img {
@@ -77,11 +90,21 @@ body {
 }
 
 .card {
+  background-color: #fff;
   border: none;
   border-radius: 8px;
-  background-color: #FFF;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  box-shadow: 0 8px 16px #0000001a;
+  text-align: center;
+  transition: transform .2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 200px 20px 200px;
+  padding: 20px;
+}
+
+.card-body{
+  color: black;
 }
 
 .card:hover {

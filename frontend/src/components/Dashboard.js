@@ -87,9 +87,9 @@ function Dashboard() {
   return (
     <div className="container mt-5 dashboard-container">
       <div className="dashboard-header">
-        <h2>Dashboard</h2>
+        <h2>Benvenuto su simplynotes</h2>
         <img src="/2.png" alt="Dashboard Logo" />
-        <button className="btn btn-secondary" onClick={handleLogout}>
+        <button className="btn btn-secondary btnLogout" onClick={handleLogout}>
           Logout
         </button>
       </div>
