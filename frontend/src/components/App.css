@@ -1,35 +1,34 @@
-
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Poppins', Arial, sans-serif;
 }
 
 .container {
-  max-width: 800px;
   margin: auto;
   padding: 20px;
 }
 
 .login-container, .register-container {
-  background-color: #220B57;
-  color: #fff;
+  background-color: #220b57;
   border-radius: 8px;
+  box-shadow: 0 8px 16px #0003;
+  color: #220b57;
+  padding: 10px;
   padding: 40px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  margin-top: 20px;
+  max-height: 1080px;
+  height: 1080px;
 }
 
 .login-container img, .register-container img {
-  width: 100%;
-  max-width: 300px;
   display: block;
   margin: 0 auto 20px;
+  width: 250px;
 }
 
 .form-container {
   background-color: #fff;
-  padding: 20px;
   border-radius: 8px;
+  text-align: center;
 }
 
 .form-label {
