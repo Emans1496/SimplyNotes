@@ -36,6 +36,15 @@ body {
   font-weight: bold;
 }
 
+.form-control{
+  margin: 10px;
+}
+
+.btnLogin{
+  margin: 10px;
+  border-radius: 20px;
+}
+
 .btn-primary {
   background-color: #F47C00;
   border: none;
